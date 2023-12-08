@@ -5,6 +5,7 @@ import ninjabrainbot.event.IDisposable;
 import ninjabrainbot.event.ISubscribable;
 import ninjabrainbot.event.ObservableField;
 import ninjabrainbot.io.IClipboardProvider;
+import ninjabrainbot.io.preferences.NinjabrainBotPreferences;
 import ninjabrainbot.model.datastate.common.DetailedPlayerPosition;
 import ninjabrainbot.model.datastate.common.IDetailedPlayerPosition;
 import ninjabrainbot.model.datastate.common.IPlayerPosition;
@@ -24,13 +25,15 @@ public class CoordinateInputSource implements IPlayerPositionInputSource, IFossi
 	private final ObservableField<Fossil> whenNewFossilInputted;
 
 	private final DisposeHandler disposeHandler = new DisposeHandler();
+	private final NinjabrainBotPreferences preferences;
 
-	public CoordinateInputSource(IClipboardProvider clipboardProvider) {
+	public CoordinateInputSource(IClipboardProvider clipboardProvider, NinjabrainBotPreferences preferences) {
 		whenNewDetailedPlayerPositionInputted = new ObservableField<>(null, true);
 		whenNewLimitedPlayerPositionInputted = new ObservableField<>(null, true);
 		whenNewFossilInputted = new ObservableField<>(null, true);
 
 		disposeHandler.add(clipboardProvider.clipboardText().subscribe(this::parseF3C));
+		this.preferences = preferences;
 	}
 
 	private void parseF3C(String f3c) {
@@ -43,7 +46,7 @@ public class CoordinateInputSource implements IPlayerPositionInputSource, IFossi
 			return;
 		}
 
-		InputData1_12 data1_12 = InputData1_12.parseInputString(f3c);
+		InputData1_12 data1_12 = InputData1_12.parseInputString(f3c, preferences);
 		if (data1_12 != null) {
 			whenNewLimitedPlayerPositionInputted.set(new LimitedPlayerPosition(data1_12.x, data1_12.z, data1_12.horizontalAngle));
 			return;

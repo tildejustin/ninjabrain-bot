@@ -65,6 +65,7 @@ public class AdvancedOptionsPanel extends JPanel {
 		calibrateButton.setAlignmentX(0.5f);
 		column1.add(calibrateButton);
 		column1.add(new FloatPreferencePanel(styleManager, I18n.get("settings.standard_deviation_manual"), preferences.sigmaManual));
+		column1.add(new CheckboxPanel(styleManager, I18n.get("settings.block_coords_manual"), preferences.blockCoordsManual));
 		column1.add(new CheckboxPanel(styleManager, I18n.get("settings.enable_standard_deviation_toggle"), preferences.useAltStd));
 		sigmaAlt = new FloatPreferencePanel(styleManager, I18n.get("settings.alt_standard_deviation"), preferences.sigmaAlt);
 		sigmaAlt.setEnabled(preferences.useAltStd.get());

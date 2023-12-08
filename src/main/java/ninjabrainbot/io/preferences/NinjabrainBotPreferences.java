@@ -51,6 +51,7 @@ public class NinjabrainBotPreferences {
 	public final BooleanPreference informationDirectionHelpEnabled;
 	public final BooleanPreference informationCombinedCertaintyEnabled;
 	public final BooleanPreference informationPortalLinkingEnabled;
+	public final BooleanPreference blockCoordsManual;
 	public final StringPreference customThemesString;
 	public final StringPreference customThemesNames;
 	public final StringPreference language;
@@ -108,6 +109,7 @@ public class NinjabrainBotPreferences {
 		informationDirectionHelpEnabled = new BooleanPreference("direction_help_enabled", false, source);
 		informationCombinedCertaintyEnabled = new BooleanPreference("combined_offset_information_enabled", true, source);
 		informationPortalLinkingEnabled = new BooleanPreference("portal_linking_warning_enabled", true, source);
+		blockCoordsManual = new BooleanPreference("block_coords_manual", false, source);
 		// String
 		customThemesString = new StringPreference("custom_themes", "", source);
 		customThemesNames = new StringPreference("custom_themes_names", "", source);

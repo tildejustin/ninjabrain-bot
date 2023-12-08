@@ -108,7 +108,7 @@ public class IntegrationTestBuilder {
 
 	public void setClipboard(String clipboardString) {
 		if (clipboardReader == null) clipboardReader = new MockedClipboardReader();
-		if (coordinateInputSource == null) coordinateInputSource = new CoordinateInputSource(clipboardReader);
+		if (coordinateInputSource == null) coordinateInputSource = new CoordinateInputSource(clipboardReader, preferences);
 		if (playerPositionInputHandler == null) playerPositionInputHandler = createPlayerPositionInputHandler();
 		if (fossilInputHandler == null) fossilInputHandler = new FossilInputHandler(coordinateInputSource, dataState, actionExecutor);
 		clipboardReader.setClipboard(clipboardString);
@@ -209,7 +209,7 @@ public class IntegrationTestBuilder {
 
 	private PlayerPositionInputHandler createPlayerPositionInputHandler() {
 		if (coordinateInputSource == null)
-			coordinateInputSource = new CoordinateInputSource(clipboardReader);
+			coordinateInputSource = new CoordinateInputSource(clipboardReader, preferences);
 		IEnderEyeThrowFactory enderEyeThrowFactory = new EnderEyeThrowFactory(preferences);
 		return new PlayerPositionInputHandler(coordinateInputSource, dataState, actionExecutor, preferences, enderEyeThrowFactory);
 	}

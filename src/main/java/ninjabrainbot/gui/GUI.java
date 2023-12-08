@@ -104,7 +104,7 @@ public class GUI {
 
 	private void initInputHandlers() {
 		Progress.setTask("Initializing input handlers", 0.08f);
-		coordinateInputSource = disposeHandler.add(new CoordinateInputSource(clipboardReader));
+		coordinateInputSource = disposeHandler.add(new CoordinateInputSource(clipboardReader, preferences));
 		IEnderEyeThrowFactory enderEyeThrowFactory = new EnderEyeThrowFactory(preferences);
 		disposeHandler.add(new PlayerPositionInputHandler(coordinateInputSource, dataState, actionExecutor, preferences, enderEyeThrowFactory));
 		disposeHandler.add(new FossilInputHandler(coordinateInputSource, dataState, actionExecutor));

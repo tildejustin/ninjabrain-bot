@@ -1,5 +1,7 @@
 package ninjabrainbot.model.datastate.endereye;
 
+import ninjabrainbot.io.preferences.NinjabrainBotPreferences;
+
 public class InputData1_12 {
 
 	public final double x, z, horizontalAngle;
@@ -10,13 +12,13 @@ public class InputData1_12 {
 		this.horizontalAngle = horizontalAngle;
 	}
 
-	public static InputData1_12 parseInputString(String string) {
+	public static InputData1_12 parseInputString(String string, NinjabrainBotPreferences preferences) {
 		String[] substrings = string.split(" ");
 		if (substrings.length != 3)
 			return null;
 		try {
-			double x = Double.parseDouble(substrings[0]) + 0.5; // Add 0.5 because block coords should be used
-			double z = Double.parseDouble(substrings[1]) + 0.5; // Add 0.5 because block coords should be used
+			double x = Double.parseDouble(substrings[0]) + (preferences.blockCoordsManual.get() ? 0.0 : 0.5);
+			double z = Double.parseDouble(substrings[1]) + (preferences.blockCoordsManual.get() ? 0.0 : 0.5);
 			double rawAlpha = Double.parseDouble(substrings[2]);
 			return new InputData1_12(x, z, rawAlpha);
 		} catch (NullPointerException | NumberFormatException e) {
