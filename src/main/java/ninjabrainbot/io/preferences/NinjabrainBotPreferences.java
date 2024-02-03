@@ -1,10 +1,13 @@
 package ninjabrainbot.io.preferences;
 
+import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
+import ninjabrainbot.io.KeyConverter;
 import ninjabrainbot.io.preferences.enums.AllAdvancementsToggleType;
 import ninjabrainbot.io.preferences.enums.MainViewType;
 import ninjabrainbot.io.preferences.enums.McVersion;
 import ninjabrainbot.io.preferences.enums.SizeSetting;
 import ninjabrainbot.io.preferences.enums.StrongholdDisplayType;
+import ninjabrainbot.util.Assert;
 
 public class NinjabrainBotPreferences {
 
@@ -13,8 +16,10 @@ public class NinjabrainBotPreferences {
 	public final IntPreference windowX;
 	public final IntPreference windowY;
 	public final IntPreference theme;
+	private final IntPreference settingsVersion;
 	public final HotkeyPreference hotkeyIncrement;
 	public final HotkeyPreference hotkeyDecrement;
+	public final HotkeyPreference hotkeyBoat;
 	public final HotkeyPreference hotkeyReset;
 	public final HotkeyPreference hotkeyUndo;
 	public final HotkeyPreference hotkeyRedo;
@@ -43,6 +48,7 @@ public class NinjabrainBotPreferences {
 	public final BooleanPreference altClipboardReader;
 	public final BooleanPreference useAltStd;
 	public final BooleanPreference useTallRes;
+	public final BooleanPreference usePreciseAngle;
 	public final BooleanPreference useOverlay;
 	public final BooleanPreference overlayAutoHide;
 	public final BooleanPreference overlayHideWhenLocked;
@@ -67,6 +73,7 @@ public class NinjabrainBotPreferences {
 		windowX = new IntPreference("window_x", 100, source);
 		windowY = new IntPreference("window_y", 100, source);
 		theme = new IntPreference("theme", 1, source);
+		settingsVersion = new IntPreference("settings_version", 0, source);
 		// Hotkey
 		hotkeyIncrement = new HotkeyPreference("hotkey_increment", source);
 		hotkeyDecrement = new HotkeyPreference("hotkey_decrement", source);
@@ -76,6 +83,7 @@ public class NinjabrainBotPreferences {
 		hotkeyMinimize = new HotkeyPreference("hotkey_minimize", source);
 		hotkeyAltStd = new HotkeyPreference("hotkey_alt_std", source);
 		hotkeyLock = new HotkeyPreference("hotkey_lock", source);
+		hotkeyBoat = new HotkeyPreference("hotkey_boat", source);
 		hotkeyToggleAllAdvancementsMode = new HotkeyPreference("hotkey_toggle_aa_mode", source);
 		// Float
 		sigma = new FloatPreference("sigma", 0.1f, 0.001f, 1f, source);
@@ -101,6 +109,7 @@ public class NinjabrainBotPreferences {
 		altClipboardReader = new BooleanPreference("alt_clipboard_reader", false, source);
 		useAltStd = new BooleanPreference("use_alt_std", false, source);
 		useTallRes = new BooleanPreference("use_tall_res", false, source);
+		usePreciseAngle = new BooleanPreference("use_precise_angle", false, source);
 		useOverlay = new BooleanPreference("use_obs_overlay", false, source);
 		overlayAutoHide = new BooleanPreference("overlay_auto_hide", false, source);
 		overlayHideWhenLocked = new BooleanPreference("overlay_lock_hide", false, source);
@@ -121,6 +130,22 @@ public class NinjabrainBotPreferences {
 		view = new MultipleChoicePreference<>("view", MainViewType.BASIC, new int[] { 0, 1 }, new MainViewType[] { MainViewType.BASIC, MainViewType.DETAILED }, source);
 		mcVersion = new MultipleChoicePreference<>("mc_version", McVersion.PRE_119, new int[] { 0, 1 }, new McVersion[] { McVersion.PRE_119, McVersion.POST_119 }, source);
 		allAdvancementsToggleType = new MultipleChoicePreference<>("aa_toggle_type", AllAdvancementsToggleType.Automatic, new int[] { 0, 1 }, new AllAdvancementsToggleType[] { AllAdvancementsToggleType.Automatic, AllAdvancementsToggleType.Hotkey }, source);
+
+		// Upgrade if necessary
+		if (settingsVersion.get() == 0) {
+			upgradeSettings_From_0_To_1();
+		}
+		Assert.isEqual(settingsVersion.get(), 1);
+	}
+
+	private void upgradeSettings_From_0_To_1(){
+		for (HotkeyPreference hotkeyPreference : HotkeyPreference.hotkeys){
+			if (hotkeyPreference.getCode() == -1)
+				continue;
+			int nativeKeyCode = KeyConverter.convertKeyCodeToNativeKeyCode(hotkeyPreference.getCode());
+			hotkeyPreference.setCode(nativeKeyCode);
+		}
+		settingsVersion.set(1);
 	}
 
 }
